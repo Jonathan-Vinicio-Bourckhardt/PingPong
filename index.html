@@ -37,6 +37,34 @@
     let framesThisSecond = 0;
     let lastFpsUpdate = performance.now();
 
+    const stars = [];
+    const numStars = 50;
+    for (let i = 0; i < numStars; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 2 + 1,
+        speed: Math.random() * 0.5 + 0.2
+      });
+    }
+
+    function updateStars() {
+      for (let star of stars) {
+        star.x -= star.speed;
+        if (star.x < 0) {
+          star.x = canvas.width;
+          star.y = Math.random() * canvas.height;
+        }
+      }
+    }
+
+    function drawStars() {
+      for (let star of stars) {
+        ctx.fillStyle = 'white';
+        ctx.fillRect(star.x, star.y, star.size, star.size);
+      }
+    }
+
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowUp') playerY -= paddleSpeed;
       else if (e.key === 'ArrowDown') playerY += paddleSpeed;
@@ -103,10 +131,13 @@
         playerScore++;
         resetBall();
       }
+
+      updateStars();
     }
 
     function render() {
       drawRect(0, 0, canvas.width, canvas.height, 'black');
+      drawStars();
       drawRect(0, playerY, paddleWidth, paddleHeight, 'white');
       drawRect(canvas.width - paddleWidth, aiY, paddleWidth, paddleHeight, 'white');
       drawCircle(ballX, ballY, ballSize, 'white');
